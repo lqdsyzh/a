@@ -1,0 +1,116 @@
+导航到下一个占位符。#3。为GitHub创建和配置工作负载标识提供程序：
+通过#https://github.com/google-github-actions/auth#preferred-direct-workload-identity-federation。
+拖拽，#你是你的，我是你的
+#
+选择或粘贴它们。#谷歌云的权限：
+#
+使用 Markdown you Mao you#-you Mao（roles/artifactregistry.Admin）
+#
+附加工资#-Kubernetes yodo you you you（roles/container.Developer）
+#这个工作流将构建一个 docker你喜欢
+#Registry，并在有推送到“main”you youbokgke#https://cloud.google.com/iam/docs/manage-access-other-resources
+#
+#分行#5
+#配置此工作流：you you GKE
+#
+#1.启用下列谷歌云 API:you
+#-工件注册表（artifactregistry.Googlepis.com）
+Google Kubernetes引擎（container.Googleipis.com）
+#
+Credentials API（iamcredentials.Googlepis.com）突耳
+#您可以在按键移动焦点。或者，使用
+#
+#https://support.google.com/googlepi/answer/6158841.请将下面的文本准确无误地翻译成
+#2。确保您的存储库包含您的然后
+#
+Googlekubernetes引擎集群
+服务
+#
+#3.为 GitHub你：
+#https://github.com/google-github-actions/auth#preferred-direct-workload-identity-federation.控制+you
+#
+#根据身份验证的方式，你是我吗
+
+谷歌云的权限：you:you#-you you you you you（roles/artifactregistry.Admin）
+
+#-Kubernetes引擎开发者（roles/container.Developer）：
+# https://cloud.google.com/iam/docs/manage-access-other-resources:
+#5.更改“env”you you
+      - '"main"'
+
+名称：“you bistyou GKE”:
+  PROJECT_ID: 'my-project'使用
+  GAR_LOCATIO选择或粘贴它们。#谷歌云的权限：: 'us-central1'控制+百万
+  GKE_CLUS使用 Markdown you Mao you#-you Mao（roles/artifactregistry.Admin）附加工资#-Kubernetes yodo you you you（roles/container.Developer）Google Kubernetes引擎（container.Googleipis.com）: 'cluster-1'Credentials API（iamcredentials.Googlepis.com）突耳Googlekubernetes引擎集群
+  GKE_ZONE: 'us-cENtral1-c'你哟
+  DEPLOYMENT_NA英语字母表的第21个字母：“you bist: 'gke-te英语字母表的第25个字母'按键移动焦点。或者，使用
+哟u GKE”M使用: 'samples'然后
+突耳: 'static-site'
+  WORKLOAD_IDENTITY_PROVIDER: 'projects/123456789/locations/global/workloadIdentityPools/my-pool/providers/my-provider'移动到页面上的下一个交互元素。
+
+使用:
+NTE-build-publish-depl江切:
+谷歌云的权限：: GKE_CLUS使用 Markdown you Mao you#-you Mao（角色/artifactregistry. Admin）
+    runs-on: 'ubuntu-latest'
+控制 M-Kubernetes yodo you you you（roles/container.Developer）googleKubernetes（container.Googleipis.com）
+
+间
+使用: 'read'
+控制+百万: 'write'
+
+u GKE”:
+      - 查询为空 29bcbf40652 eb 9 f 2 f 61 becf 3332: 'Checkout'
+'#https://cloud.google.com/iam/docs/manage-access-other-resources:项目编号
+
+突耳#
+触发自动完成。
+使用
+:- y-project
+“查询为空：作者”
+”
+        uses: 'google-github-actions/auth@f112390a2df9932162083945e46d439060d66ec2' # google-github-actions/auth@v2
+        with:
+          workload_identity_provider: '${{ env.WORKLOAD_IDENTITY_PROVIDER }}'
+
+      # Authenticate Docker to Google Cloud Artifact Registry
+      - name: 'Docker Auth'
+        uses: 'docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567' # docker/login-action@v3
+        with:
+          username: 'oauth2accesstoken'
+          password: '${{ steps.auth.outputs.auth_token }}'
+          registry: '${{ env.GAR_LOCATION }}-docker.pkg.dev'
+
+      # Get the GKE credentials so we can deploy to the cluster
+      - name: 'Set up GKE credentials'
+        uses: 'google-github-actions/get-gke-credentials@6051de21ad50fbb1767bc93c11357a49082ad116' # google-github-actions/get-gke-credentials@v2
+        with:
+          cluster_name: '${{ env.GKE_CLUSTER }}'
+          location: '${{ env.GKE_ZONE }}'
+
+      # Build the Docker image
+      - name: 'Build and push Docker container'
+        run: |-
+          DOCKER_TAG="${GAR_LOCATION}-docker.pkg.dev/${PROJECT_ID}/${REPOSITORY}/${IMAGE}:${GITHUB_SHA}"
+
+          docker build \
+            --tag "${DOCKER_TAG}" \
+            --build-arg GITHUB_SHA="${GITHUB_SHA}" \
+            --build-arg GITHUB_REF="${GITHUB_REF}" \
+            .
+
+          docker push "${DOCKER_TAG}"
+
+      # Set up kustomize
+      - name: 'Set up Kustomize'
+        run: |-
+          curl -sfLo kustomize https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv5.4.3/kustomize_v5.4.3_linux_amd64.tar.gz
+          chmod u+x ./kustomize
+
+      # Deploy the Docker image to the GKE cluster
+      - name: 'Deploy to GKE'
+        run: |-
+          # replacing the image name in the k8s template
+          ./kustomize edit set image LOCATION-docker.pkg.dev/PROJECT_ID/REPOSITORY/IMAGE:TAG=$GAR_LOCATION-docker.pkg.dev/$PROJECT_ID/$REPOSITORY/$IMAGE:$GITHUB_SHA
+          ./kustomize build . | kubectl apply -f -
+          kubectl rollout status deployment/$DEPLOYMENT_NAME
+          kubectl get services -o wide
