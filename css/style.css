@@ -1,0 +1,102 @@
+/* ========== 全局 ========== */
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;overflow:hidden}
+body{font-family:"PingFang SC","Microsoft YaHei",sans-serif;background:#070b14;color:#b8c8e0;font-size:13px;line-height:1.5}
+#app{height:100vh;display:flex;flex-direction:column;max-width:1400px;margin:0 auto}
+
+/* ========== 顶栏 ========== */
+#topBar{background:#0a1020;border-bottom:1px solid #1a3050;padding:6px 12px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;flex-shrink:0;z-index:50}
+#topBar .title{color:#5aa8ff;font-size:16px;font-weight:bold;text-shadow:0 0 8px rgba(90,168,255,0.3)}
+#topBar .year{color:#7ec8ff;font-size:13px;font-weight:bold;margin-left:8px}
+#topBar .season{color:#e8a040;font-size:12px;font-weight:bold;margin-left:6px}
+#topBar .stats{display:flex;gap:5px;flex-wrap:wrap}
+#topBar .stat{background:#0f1a2e;border:1px solid #1e3a5f;border-radius:6px;padding:4px 7px;font-size:10px;min-width:56px;text-align:center}
+#topBar .stat l{display:block;color:#5a7a9f;font-size:9px;margin-bottom:1px}
+#topBar .stat s{color:#5aa8ff;font-weight:bold;font-size:11px}
+#btnYear{background:#1a3a6a;border:1px solid #2a6aaa;color:#7ec8ff;padding:6px 14px;border-radius:6px;cursor:pointer;font-weight:bold;font-size:12px;transition:all 0.2s}
+#btnYear:hover{background:#224a8a}
+#btnYear:active{transform:scale(0.96)}
+#btnYear:disabled{opacity:0.4;cursor:not-allowed;background:#1a2a3a}
+
+/* ========== 主布局 ========== */
+#mainWrap{display:flex;flex:1;min-height:0;overflow:hidden}
+#sideNav{width:90px;background:#0a1020;border-right:1px solid #1a3050;display:flex;flex-direction:column;padding:6px 4px;gap:3px;flex-shrink:0;overflow-y:auto}
+.navBtn{padding:8px 2px;border:1px solid #1e3a5f;background:#0f1a2e;color:#6a8ab5;border-radius:6px;cursor:pointer;font-size:11px;text-align:center;line-height:1.3;flex-shrink:0;transition:all 0.15s}
+.navBtn:hover{background:#1a2d4a;border-color:#2a6aaa;color:#a0c8ff}
+.navBtn.act{background:#1a3a6a;border-color:#3a8aca;color:#7ec8ff;box-shadow:inset 0 0 8px rgba(58,138,202,0.2)}
+#contentArea{flex:1;padding:10px;overflow-y:auto;background:#070b14;min-width:0}
+
+/* ========== 面板 ========== */
+.panel{background:#0c1326;border:1px solid #1e3a5f;border-radius:10px;padding:12px;margin-bottom:10px;box-shadow:0 2px 8px rgba(0,0,0,0.3)}
+.panel h3{color:#5aa8ff;border-bottom:1px solid #1a3050;padding-bottom:6px;margin-bottom:10px;font-size:14px;display:flex;justify-content:space-between;align-items:center}
+.panel h4{color:#6a9ad5;font-size:12px;margin:10px 0 4px}
+.row{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+
+/* ========== 数据格 ========== */
+.stat-box{background:#0a1020;border:1px solid #1e3a5f;border-radius:6px;padding:6px 8px;min-width:60px;text-align:center;flex:1}
+.stat-box l{display:block;color:#5a7a9f;font-size:9px;margin-bottom:2px}
+.stat-box s{color:#5aa8ff;font-weight:bold;font-size:12px}
+.stat-box.warn s{color:#e8a040}
+.stat-box.danger s{color:#e06060}
+.stat-box.good s{color:#60c080}
+
+/* ========== 按钮 ========== */
+button,.btn{padding:6px 12px;margin:2px;border:1px solid #2a4a7a;background:#132240;color:#8ab4e0;border-radius:6px;cursor:pointer;font-family:inherit;font-size:11px;transition:all 0.15s}
+button:hover,.btn:hover{background:#1a3050;border-color:#3a7aca;color:#c8e0ff}
+button:active,.btn:active{transform:scale(0.97)}
+button.sel,button.act{background:#1a3a6a!important;border-color:#3a8aca!important;color:#7ec8ff!important}
+button.red{border-color:#7a2a2a;color:#e08080;background:#2a1515}
+button.red:hover{background:#3a2020}
+button.green{border-color:#2a6a3a;color:#80e080;background:#152a1a}
+button.green:hover{background:#1f3f25}
+button.gold{border-color:#8a7a2a;color:#e0d080;background:#2a2815}
+button.gold:hover{background:#3a3520}
+button:disabled{opacity:0.4;cursor:not-allowed}
+
+/* ========== 列表/表格 ========== */
+.list{max-height:300px;overflow-y:auto;padding-right:4px}
+.list::-webkit-scrollbar{width:4px}
+.list::-webkit-scrollbar-thumb{background:#1e3a5f;border-radius:2px}
+table{width:100%;border-collapse:collapse;font-size:11px;margin:6px 0}
+th,td{padding:5px 6px;border:1px solid #1e3a5f;text-align:center}
+th{background:#0f1a2e;color:#6a9ad5;font-weight:bold}
+tr:nth-child(even){background:#0a1020}
+tr:hover{background:#111a2e}
+td.left{text-align:left}
+.hide{display:none!important}
+
+/* ========== 弹窗 ========== */
+.modal-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);z-index:1000;display:flex;align-items:center;justify-content:center}
+.modal{background:#0c1326;border:1px solid #2a6aaa;border-radius:12px;padding:20px;max-width:600px;width:90%;max-height:80vh;overflow-y:auto;box-shadow:0 0 30px rgba(0,0,0,0.8)}
+.modal h3{color:#7ec8ff;margin-bottom:10px;border-bottom:1px solid #1a3050;padding-bottom:8px}
+.memorial-item{background:#0f1a2e;border:1px solid #1e3a5f;border-radius:8px;padding:10px;margin-bottom:10px}
+.memorial-item h4{color:#e8a040;margin-bottom:5px}
+.memorial-item p{font-size:11px;color:#b8c8e0;margin-bottom:6px}
+.memorial-item .advisor{font-size:10px;color:#6a9ad5;font-style:italic;margin-bottom:8px}
+.memorial-item .options{display:flex;flex-direction:column;gap:4px}
+.memorial-item .options button{text-align:left}
+
+/* ========== 势力条 ========== */
+.faction-bar{display:flex;align-items:center;gap:8px;margin:6px 0}
+.faction-name{width:70px;font-size:11px;color:#a0c8ff;flex-shrink:0}
+.faction-bar-track{flex:1;height:10px;background:#070b14;border:1px solid #1e3a5f;border-radius:5px;overflow:hidden;position:relative}
+.faction-bar-fill{height:100%;transition:width 0.3s}
+.faction-sat{background:linear-gradient(90deg,#2a6a3a,#60c080)}
+.faction-sat-low{background:linear-gradient(90deg,#7a2a2a,#e06060)}
+.faction-inf{background:linear-gradient(90deg,#2a4a7a,#5aa8ff)}
+.faction-inf-high{background:linear-gradient(90deg,#8a7a2a,#e0d080)}
+.faction-block{background:#0a1020;border:1px solid #1e3a5f;border-radius:8px;padding:8px;margin-bottom:8px}
+.faction-block .desc{font-size:10px;color:#6a9ad5;margin-top:2px}
+
+/* ========== 警告/提示 ========== */
+.alert-list{margin-top:8px}
+.alert{background:#2a1515;border:1px solid #7a2a2a;border-radius:6px;padding:6px 8px;margin-bottom:4px;font-size:11px;color:#e08080}
+.alert.warn{background:#2a2815;border-color:#8a7a2a;color:#e0d080}
+.alert.good{background:#152a1a;border-color:#2a6a3a;color:#80e080}
+
+/* ========== 日志 ========== */
+.log-panel{max-height:60vh;overflow-y:auto;font-size:11px;line-height:1.7}
+.log-panel::-webkit-scrollbar{width:4px}
+.log-panel::-webkit-scrollbar-thumb{background:#1e3a5f;border-radius:2px}
+.log-entry{padding:2px 0;border-bottom:1px dashed #14233a}
+.log-entry .meta{color:#5a7a9f;font-size:10px;margin-right:6px}

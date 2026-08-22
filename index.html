@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, maximum-scale=1.5">
+<title>大明国策 · 大周列国志版</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="app">
+    <div id="topBar">
+        <div>
+            <span class="title">大明国策</span>
+            <span class="year" id="yearDisplay">永乐元年</span>
+            <span class="season" id="seasonDisplay">· 春</span>
+        </div>
+        <div class="stats">
+            <div class="stat"><l>国库</l><s id="treasury">10000</s></div>
+            <div class="stat"><l>粮食</l><s id="food">5000</s></div>
+            <div class="stat"><l>稳定</l><s id="stability">60</s></div>
+            <div class="stat"><l>威望</l><s id="prestige">50</s></div>
+            <div class="stat"><l>军力</l><s id="militaryPower">8000</s></div>
+            <div class="stat"><l>天命</l><s id="mandate">70</s></div>
+        </div>
+        <button id="btnYear" onclick="startCourt()">开启春季朝议</button>
+    </div>
+    <div id="mainWrap">
+        <div id="sideNav">
+            <button class="navBtn act" onclick="switchTab('court')">朝议</button>
+            <button class="navBtn" onclick="switchTab('factions')">势力</button>
+            <button class="navBtn" onclick="switchTab('overview')">概览</button>
+            <button class="navBtn" onclick="switchTab('log')">日志</button>
+        </div>
+        <div id="contentArea">
+            <div id="panel-court" class="panel">
+                <h3>朝议 <span style="font-size:11px;color:#6a9ad5;">点击上方按钮开启本季奏折</span></h3>
+                <div id="courtStatus">暂无奏折，点击「开启春季朝议」开始处理政务。</div>
+                <div id="factionAlert" class="alert-list"></div>
+            </div>
+            <div id="panel-factions" class="panel hide">
+                <h3>五大势力</h3>
+                <p style="font-size:11px;color:#6a9ad5;margin-bottom:8px;">满意度影响行为倾向，影响力决定政治分量。保持平衡，避免一方独大或过弱。</p>
+                <div id="factionList"></div>
+            </div>
+            <div id="panel-overview" class="panel hide">
+                <h3>国家概览</h3>
+                <div id="overviewContent"></div>
+            </div>
+            <div id="panel-log" class="panel hide">
+                <h3>事件日志</h3>
+                <div class="log-panel" id="logPanel"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="memorialModal" class="modal-overlay hide">
+    <div class="modal">
+        <h3>朝议奏折 <span style="font-size:11px;color:#6a9ad5;">请逐一批复</span></h3>
+        <div id="memorialList"></div>
+    </div>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/engine.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
