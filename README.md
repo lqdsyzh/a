@@ -1,21 +1,75 @@
-# 社区（短期过渡）
+# Minecraft 克隆版 (TraeCode)
 
-这是仓库 lqdsyzh/a 的社区引导分支。目标是用最少的成本（0 服务器成本）在 7 天内搭建一个可访问、可讨论的社区入口，长期再迁移到独立论坛（Discourse）。
+一个完整的 Minecraft 风格体素游戏，使用 Python + PyOpenGL + Pygame 实现。
 
-快速说明：
-- 我已在分支 `community/bootstrap` 中放置一套社区文档和 GitHub Pages 静态站点模板（docs/），你可以把它发布为 GitHub Pages 网站作为短期论坛入口。
-- 我同时在仓库里放了一套常见的协作文件（CONTRIBUTING、CODE_OF_CONDUCT、ISSUE/PULL 模板），方便新的贡献者参与。
+## 安装
 
-接下来做什么（我建议）：
-1. 在仓库设置中启用 GitHub Pages，发布源选择 `docs/` 文件夹（通常在 Settings → Pages）。
-2. 在仓库设置中启用 Discussions（可选，但建议启用以配合 Giscus）。
-3. 按 docs/ 中的说明选用 Giscus（使用 Discussions）或 Utterances（使用 Issues）作为评论/讨论后端。Giscus 更接近论坛体验但需要创建 Discussion 分类并获取分类 ID；Utterances 更简单，立刻可用。
+```bash
+pip install -r requirements.txt
+```
 
-如果你确认，我会：
-- 等你启用 Pages（或我也可以帮你创建部署 workflow 自动发布）；
-- 指导你用 QQ 邮箱开启 SMTP（为未来 Discourse 做准备）；
-- 准备 Discourse 的一键部署脚本，等你有服务器就能快速上线。
+macOS 用户如遇 SDL 报错：`brew install sdl2 sdl2_image sdl2_mixer sdl2_ttf pkg-config`
 
----
+## 运行
 
-分支链接: https://github.com/lqdsyzh/a/tree/community/bootstrap
+```bash
+python minecraft_clone.py
+```
+
+## 操作
+
+| 键 | 功能 |
+|---|---|
+| W/A/S/D | 移动 |
+| 鼠标 | 视角 |
+| 空格 | 跳跃 / 游泳上浮 |
+| Shift | 游泳下潜 |
+| Ctrl | 冲刺 |
+| 左键 | 破坏方块 / 攻击生物 |
+| 右键 | 放置方块 / 使用物品 |
+| 1-9 | 切换快捷栏 |
+| E | 打开/关闭库存 |
+| ESC | 暂停 |
+| F3 | 切换调试信息 |
+
+## 包含的功能
+
+- 40+ 种方块：草、泥土、石头、木头、树叶、玻璃、4 种矿石、TNT、工作台、熔炉、圆石、石头砖、苔石、仙人掌、蒲公英、罂粟、树苗、沙、砾石、冰、糖蔗、南瓜、蛋糕、床、书架、海绵、黑曜石、萤石、沙岩、黏土、雪层
+- 6 种生物群系：平原、森林、沙漠、山地、海洋、雪地
+- 程序化地形 + 洞穴 + 树木 + 矿石
+- 完整的第一人称物理（重力/跳跃/碰撞/游泳/冲刺）
+- 方块破坏/放置 + 工具等级（镐/剑/斧）+ 库存
+- 合成表（木板→木棍→工具、工作台、熔炉、TNT、玻璃、砖石等）
+- 昼夜循环（太阳/月亮/天空/光照）
+- 生物：猪、牛、羊、鸡、僵尸、骷髅（白天友好，夜晚敌对）
+- 粒子效果（破坏、放置、爆炸、烟雾）
+- 程序化音效（破坏、放置、爆炸、受伤、进食）
+- 生存机制（生命、饥饿、死亡与重生、伤害闪红）
+- HUD（十字准星、快捷栏、心/饥饿条、调试信息、暂停菜单、库存、死亡界面）
+- 雾效、平滑光照
+
+## 性能
+
+中等性能机器可达 60 FPS。如果卡顿：
+- 修改 `RENDER_DIST = 5` 调小到 3 或 4
+- 窗口改小：修改 `WINDOW_W, WINDOW_H`
+
+## 代码结构
+
+代码全部在单文件 `minecraft_clone.py` 中，分为 16 个章节：
+1. 常量
+2. 方块 ID 与属性
+3. 程序化纹理生成
+4. 纹理图集
+5. Perlin 噪声
+6. 区块 Chunk
+7. 世界 World
+8. 库存 Inventory
+9. 合成系统
+10. 玩家 Player
+11. 生物 Mob
+12. 粒子系统
+13. 渲染器
+14. 音效
+15. HUD
+16. 主游戏循环
