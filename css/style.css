@@ -100,3 +100,13 @@ td.left{text-align:left}
 .log-panel::-webkit-scrollbar-thumb{background:#1e3a5f;border-radius:2px}
 .log-entry{padding:2px 0;border-bottom:1px dashed #14233a}
 .log-entry .meta{color:#5a7a9f;font-size:10px;margin-right:6px}
+
+/* ========== 表单 / 账号 ========== */
+.field{margin:8px 0}
+.field label{display:block;color:#6a9ad5;font-size:10px;margin-bottom:3px}
+.field input{width:100%;padding:7px 9px;background:#0a1020;border:1px solid #2a4a7a;border-radius:6px;color:#b8c8e0;font-size:13px;font-family:inherit;outline:none}
+.field input:focus{border-color:#3a8aca}
+.account-pill{display:inline-block;background:#0f1a2e;border:1px solid #1e3a5f;border-radius:6px;padding:5px 9px;margin:3px 4px 3px 0;font-size:11px;color:#8ab4e0}
+.account-pill.sel{border-color:#3a8aca;color:#7ec8ff}
+.good{color:#60c080}
+.danger{color:#e06060}

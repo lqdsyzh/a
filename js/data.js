@@ -285,3 +285,93 @@ const VICTORY_CONDITIONS = {
     driveOutTartar:   { name:'驱逐鞑虏', desc:'消灭北元/瓦剌/鞑靼' },
     revival:          { name:'中兴之主', desc:'从稳定<30恢复到稳定>70，持续5年' }
 };
+
+// ========== 内阁学派（首辅建议） ==========
+const SCHOLAR_LIST = ['儒家','法家','兵家','农家','道家','墨家','纵横家','阴阳家','医家'];
+// 不同首辅学派对各类奏折的建议措辞前缀
+const SCHOLAR_CAUTION = {
+    '儒家':'以仁德安民为先', '法家':'当以律法立威、赏罚分明', '兵家':'士卒之怒不可轻，整军为先',
+    '农家':'以农为本、先安耕织', '道家':'无为而治、顺时应势', '墨家':'以工代赈、器械济民',
+    '纵横家':'权衡制衡、远交近攻', '阴阳家':'观象察变、敬天修德', '医家':'救民生、御疾疫'
+
+};
+
+// ========== 奇观建造 ==========
+// cost: 国库银两；turns: 需多少个秋季节推进（每季政令推进1格）；effect: 完工立即生效
+const PROJECTS = [
+    { id:'zicheng',   name:'紫禁城',   desc:'扩建宫城，彰显天子威仪。', cost:{treasury:12000}, turns:10, effect:{mandate:20, prestige:30, stability:10} },
+    { id:'changcheng',name:'万里长城', desc:'修筑边墙，连九边为一体。', cost:{treasury:9000, food:3000}, turns:15, effect:{militaryPower:3000, prestige:15} },
+    { id:'yunhe',     name:'大运河',   desc:'疏通运河，南北漕运通畅。', cost:{treasury:6000}, turns:8,  effect:{treasury:1000, food:800, prestige:8} },
+    { id:'dadian',    name:'永乐大典', desc:'敕修群书，汇三千年文脉。', cost:{treasury:4000}, turns:6,  effect:{prestige:20, civilSatisfaction:10} },
+    { id:'xiaoling',  name:'明孝陵',   desc:'营建皇陵，以安历代先灵。', cost:{treasury:5000}, turns:6,  effect:{mandate:10, royalSatisfaction:10} }
+];
+const PROJECT_NAMES = { zicheng:'紫禁城', changcheng:'万里长城', yunhe:'大运河', dadian:'永乐大典', xiaoling:'明孝陵' };
+
+// ========== 每季政策（每季三选一，立即生效） ==========
+const POLICY_TEMPLATES = {
+    1: [ // 春
+        { text:'轻徭薄赋', desc:'减春税赋，休养生息。', effects:{ food:400, stability:4, civilSatisfaction:5 } },
+        { text:'重农兴桑', desc:'劝课农桑，广植桑麻。', effects:{ food:500, prestige:2 } },
+        { text:'兴办春闱', desc:'加开科第，广纳贤才。', effects:{ civilSatisfaction:6, prestige:4, treasury:-300 } }
+    ],
+    2: [ // 夏
+        { text:'大举操练', desc:'点校兵马，张军威。', effects:{ militaryPower:400, militarySatisfaction:5, treasury:-400 } },
+        { text:'疏浚水利', desc:'以工代赈，修渠固堤。', effects:{ food:300, stability:3, treasury:-300 } },
+        { text:'减免杂费', desc:'罢不急之务，宽民力。', effects:{ stability:4, civilSatisfaction:4, prestige:2 } }
+    ],
+    3: [ // 秋
+        { text:'加征国赋', desc:'增平米税，充国用。', effects:{ treasury:1500, stability:-6, civilSatisfaction:-6 } },
+        { text:'均平秋税', desc:'量入为出，宽严得宜。', effects:{ treasury:800 } },
+        { text:'开仓平粜', desc:'柴粮抑价，济饥民。', effects:{ stability:5, civilSatisfaction:5, food:-300 } }
+    ],
+    4: [ // 冬
+        { text:'祭祀天地', desc:'郊天祀地，祈国祚永昌。', effects:{ mandate:6, prestige:4, treasury:-500 } },
+        { text:'编纂国史', desc:'命史官修实录，以彰功业。', effects:{ prestige:5, civilSatisfaction:3, treasury:-300 } },
+        { text:'冬犒三军', desc:'颁赏九边，稳军心。', effects:{ militarySatisfaction:6, militaryPower:200, treasury:-600 } }
+    ]
+};
+
+// ========== 后宫 / 皇子 ==========
+const PRINCE_GIVEN = ['允','瞻','祈','祐','溥','祁','见','永','翊','常'];
+const PRINCE_CHAR = ['仁','暴','庸','明','睿','悍','和','惰'];
+// 每若干年新生一名皇子的概率基数（实际按 state 决定）
+const PRINCE_CYCLE_YEARS = 2;   // 每隔该年数检查是否新生皇子
+
+// ========== 连锁事件（隐患池：处理失当后积压，下季追加为危机奏折） ==========
+const HAZARD_POOL = [
+    { title:'灾民流徙', type:'隐患', desc:'前番赈灾不力，流民聚于畿辅，恐生民变。',
+      advisor:'农家：当开粥棚、给牛种，安插流民。',
+      options:[
+        {text:'设粥厂安民', effects:{treasury:-500, food:-400, stability:6, civilSatisfaction:6}},
+        {text:'遣送还乡',   effects:{food:-200, stability:2, civilSatisfaction:3, prestige:2}},
+        {text:'驱其出境',   effects:{stability:-10, militarySatisfaction:3, prestige:-5}}
+      ]},
+    { title:'瘟疫复发', type:'隐患', desc:'前番疫情未尽，江南多城复有疫讯。',
+      advisor:'医家：当再遣医官，掩埋尸骸。',
+      options:[
+        {text:'再遣医官', effects:{treasury:-600, stability:5, civilSatisfaction:5}},
+        {text:'封锁疫城', effects:{food:-300, militarySatisfaction:4, stability:-4}},
+        {text:'迁民意避', effects:{food:-500, stability:3, civilSatisfaction:3}}
+      ]},
+    { title:'边军鼓噪', type:'隐患', desc:'前番军饷拖欠，九边军士聚众鼓噪。',
+      advisor:'武将：当速发饷银，解散乱兵。',
+      options:[
+        {text:'补发饷银', effects:{treasury:-1000, militarySatisfaction:10, stability:4}},
+        {text:'严惩为首', effects:{militarySatisfaction:-8, stability:-6, prestige:3}},
+        {text:'调镇他处', effects:{treasury:-400, militarySatisfaction:-3, militaryPower:-300}}
+      ]},
+    { title:'民变蜂起', type:'隐患', desc:'苛政之下，诸路民变此起彼伏。',
+      advisor:'道家：当恤民下诏，罪己以安天下。',
+      options:[
+        {text:'下诏罪己', effects:{prestige:3, stability:5, civilSatisfaction:6}},
+        {text:'派兵镇压', effects:{militaryPower:-500, militarySatisfaction:5, stability:-4, prestige:4}},
+        {text:'蠲免钱粮', effects:{food:-300, stability:6, civilSatisfaction:8}}
+      ]}
+];
+
+// ========== 账号成就记录类型 ==========
+const ACCOUNT_ENDING_NAMES = {
+    victory: '盛世/中兴',
+    'mandate_end':'天命已尽', 'stability_end':'国本动摇', 'peasant_end':'农民起义',
+    'eunuch_coup':'宦官废立', 'consort_coup':'外戚篡权'
+};

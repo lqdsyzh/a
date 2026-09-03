@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-<div id="app">
+<div id="app" class="hide">
     <div id="topBar">
         <div>
             <span class="title">大明国策</span>
@@ -26,16 +26,33 @@
     </div>
     <div id="mainWrap">
         <div id="sideNav">
-            <button class="navBtn act" onclick="switchTab('court')">朝议</button>
-            <button class="navBtn" onclick="switchTab('factions')">势力</button>
-            <button class="navBtn" onclick="switchTab('overview')">概览</button>
-            <button class="navBtn" onclick="switchTab('log')">日志</button>
+            <button class="navBtn act" data-tab="court" onclick="switchTab('court')">朝议</button>
+            <button class="navBtn" data-tab="policy" onclick="switchTab('policy')">政令</button>
+            <button class="navBtn" data-tab="projects" onclick="switchTab('projects')">奇观</button>
+            <button class="navBtn" data-tab="royal" onclick="switchTab('royal')">宗室</button>
+            <button class="navBtn" data-tab="factions" onclick="switchTab('factions')">势力</button>
+            <button class="navBtn" data-tab="overview" onclick="switchTab('overview')">概览</button>
+            <button class="navBtn" data-tab="log" onclick="switchTab('log')">日志</button>
+            <button class="navBtn" data-tab="account" onclick="switchTab('account')">账号</button>
         </div>
         <div id="contentArea">
             <div id="panel-court" class="panel">
-                <h3>朝议 <span style="font-size:11px;color:#6a9ad5;">点击上方按钮开启本季奏折</span></h3>
-                <div id="courtStatus">暂无奏折，点击「开启春季朝议」开始处理政务。</div>
+                <h3>朝议 <span style="font-size:11px;color:#6a9ad5;">每季先颁政令，再批奏折</span></h3>
+                <div id="courtStatus">暂无奏折，点击上方按钮开始。</div>
                 <div id="factionAlert" class="alert-list"></div>
+            </div>
+            <div id="panel-policy" class="panel hide">
+                <h3>本季政令</h3>
+                <div id="policyListPanel"></div>
+            </div>
+            <div id="panel-projects" class="panel hide">
+                <h3>奇观监造</h3>
+                <div id="projectsPanelContent"></div>
+            </div>
+            <div id="panel-royal" class="panel hide">
+                <h3>宗室 · 皇子</h3>
+                <p style="font-size:11px;color:#6a9ad5;margin-bottom:8px;">立储以安宗庙，就藩以拱京师。资质决定储君优劣。</p>
+                <div id="royalPanelContent"></div>
             </div>
             <div id="panel-factions" class="panel hide">
                 <h3>五大势力</h3>
@@ -50,14 +67,60 @@
                 <h3>事件日志</h3>
                 <div class="log-panel" id="logPanel"></div>
             </div>
+            <div id="panel-account" class="panel hide">
+                <h3>账号</h3>
+                <div id="accountPanelContent"></div>
+            </div>
         </div>
     </div>
 </div>
 
+<!-- 奏折弹窗 -->
 <div id="memorialModal" class="modal-overlay hide">
     <div class="modal">
         <h3>朝议奏折 <span style="font-size:11px;color:#6a9ad5;">请逐一批复</span></h3>
         <div id="memorialList"></div>
+    </div>
+</div>
+
+<!-- 政令弹窗 -->
+<div id="policyModal" class="modal-overlay hide">
+    <div class="modal" style="max-width:680px;">
+        <h3 id="policyTitle">本季政令</h3>
+        <div id="policyOpts"></div>
+        <div id="projectOpts"></div>
+        <div class="row" style="justify-content:flex-end;margin-top:10px;">
+            <button class="green" onclick="beginMemorialsAction()">部署完毕，开始朝议</button>
+        </div>
+    </div>
+</div>
+
+<!-- 登录/注册覆盖层 -->
+<div id="loginOverlay" class="modal-overlay">
+    <div class="modal" style="max-width:420px;">
+        <h3>登录 · 大明国策</h3>
+        <div class="row" style="margin-bottom:10px;">
+            <button class="sel" id="tabLogin" onclick="setAuthTab('login')">登录</button>
+            <button id="tabReg" onclick="setAuthTab('register')">注册</button>
+        </div>
+        <!-- 登录表单 -->
+        <div id="loginForm">
+            <div class="field"><label>账号</label><input id="loginUser" placeholder="用户名"></div>
+            <div class="field"><label>密码</label><input id="loginPass" type="password" placeholder="密码"></div>
+            <button class="green" style="width:100%;margin-top:8px;" onclick="handleLogin()">登 录</button>
+        </div>
+        <!-- 注册表单 -->
+        <div id="registerForm" class="hide">
+            <div class="field"><label>账号</label><input id="regUser" placeholder="2-16位中文/字母/数字"></div>
+            <div class="field"><label>密码</label><input id="regPass" type="password" placeholder="至少4位"></div>
+            <div class="field"><label>确认密码</label><input id="regPass2" type="password" placeholder="再次输入"></div>
+            <button class="green" style="width:100%;margin-top:8px;" onclick="handleRegister()">注册并登录</button>
+        </div>
+        <div id="authMsg" style="min-height:18px;font-size:11px;margin-top:6px;color:#80e080;"></div>
+        <hr style="border-color:#1a3050;margin:10px 0;">
+        <div style="font-size:10px;color:#6a9ad5;margin-bottom:4px;">本地已有账号：</div>
+        <div id="accountList"></div>
+        <p style="font-size:10px;color:#5a7a9f;margin-top:10px;">* 本地账号系统：进度仅保存在当前设备浏览器，暂不支持云端同步。</p>
     </div>
 </div>
 

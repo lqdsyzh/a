@@ -1,44 +1,41 @@
-// ========== 初始化与启动 ==========
+// ========== 启动与初始化 ==========
 
 function initGame() {
-    // 尝试读档；无存档则使用初始 state（engine.js 中已定义初始值）
-    const loaded = loadGame();
-    if (!loaded) {
-        // state 已是 engine.js 顶部的初始值，无需再 newGame()
-        log('游戏开始。你是大明皇帝，治理天下。', 'good');
+    // 每次加载先刷新登录界面列表
+    if (typeof renderAccountList === 'function') renderAccountList();
+    // 若已有登录态（未退出），直接进入游戏
+    if (getCurrentUser()) {
+        const loaded = loadGame();
+        if (!loaded) newGame();
+        document.getElementById('app').classList.remove('hide');
+        if (!state.princes.length) checkPrinceBirth();
+        log(`欢迎回来，${getCurrentUser()}。`);
+        refreshAllUI();
+        switchTab('court');
+        updateSeasonButton();
     } else {
-        log('已加载存档，继续治理大明。', 'good');
+        // 未登录：显示登录覆盖层
+        document.getElementById('app').classList.add('hide');
+        document.getElementById('loginOverlay').classList.remove('hide');
+        setAuthTab('login');
     }
-    updateTopBar();
-    renderFactionPanel();
-    renderOverview();
-    renderLog();
-    renderFactionAlert();
-    switchTab('court');
-
-    const status = document.getElementById('courtStatus');
-    const btn = document.getElementById('btnYear');
-    if (state.gameOver) {
-        showGameOver();
-    } else {
-        const seasonName = SEASONS[state.season - 1];
-        if (status) status.innerHTML = `永乐${state.year}年${seasonName}季，点击「开启${seasonName}季朝议」处理朝政。`;
-        if (btn) {
-            btn.textContent = `开启${seasonName}季朝议`;
-            btn.disabled = false;
-        }
-    }
+    renderAccountList();
 }
 
-// 暴露给 HTML onclick 使用的全局函数（已声明同名，这里仅作显式引用以确认存在）
+// 暴露给 HTML onclick 使用的全局函数
 window.startCourt = startCourt;
 window.switchTab = switchTab;
 window.handleMemorialChoice = handleMemorialChoice;
+window.choosePolicy = choosePolicy;
+window.handleProject = handleProject;
+window.advanceProject = advanceProject;
+window.setHeir = setHeir;
+window.enfeoffPrince = enfeoffPrince;
 
 // 页面加载完毕启动
 window.onload = initGame;
 
 // 离开页面前自动存档
 window.addEventListener('beforeunload', () => {
-    if (typeof saveGame === 'function') saveGame();
+    if (typeof saveGame === 'function' && getCurrentUser()) saveGame();
 });
