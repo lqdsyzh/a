@@ -105,15 +105,15 @@
         </div>
         <!-- 登录表单 -->
         <div id="loginForm">
-            <div class="field"><label>账号</label><input id="loginUser" placeholder="用户名"></div>
-            <div class="field"><label>密码</label><input id="loginPass" type="password" placeholder="密码"></div>
+            <div class="field"><label>账号</label><input id="loginUser" placeholder="用户名" onkeydown="if(event.key==='Enter')document.getElementById('loginPass').focus()"></div>
+            <div class="field"><label>密码</label><input id="loginPass" type="password" placeholder="密码" onkeydown="if(event.key==='Enter')handleLogin()"></div>
             <button class="green" style="width:100%;margin-top:8px;" onclick="handleLogin()">登 录</button>
         </div>
         <!-- 注册表单 -->
         <div id="registerForm" class="hide">
-            <div class="field"><label>账号</label><input id="regUser" placeholder="2-16位中文/字母/数字"></div>
-            <div class="field"><label>密码</label><input id="regPass" type="password" placeholder="至少4位"></div>
-            <div class="field"><label>确认密码</label><input id="regPass2" type="password" placeholder="再次输入"></div>
+            <div class="field"><label>账号</label><input id="regUser" placeholder="2-16位中文/字母/数字" onkeydown="if(event.key==='Enter')document.getElementById('regPass').focus()"></div>
+            <div class="field"><label>密码</label><input id="regPass" type="password" placeholder="至少4位" onkeydown="if(event.key==='Enter')document.getElementById('regPass2').focus()"></div>
+            <div class="field"><label>确认密码</label><input id="regPass2" type="password" placeholder="再次输入" onkeydown="if(event.key==='Enter')handleRegister()"></div>
             <button class="green" style="width:100%;margin-top:8px;" onclick="handleRegister()">注册并登录</button>
         </div>
         <div id="authMsg" style="min-height:18px;font-size:11px;margin-top:6px;color:#80e080;"></div>

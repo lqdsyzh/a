@@ -168,6 +168,10 @@ function hideLogin() {
 function setAuthTab(tab) {
     document.getElementById('loginForm').classList.toggle('hide', tab !== 'login');
     document.getElementById('registerForm').classList.toggle('hide', tab !== 'register');
+    const tl = document.getElementById('tabLogin');
+    const tr = document.getElementById('tabReg');
+    if (tl) tl.classList.toggle('sel', tab === 'login');
+    if (tr) tr.classList.toggle('sel', tab === 'register');
 }
 function handleLogin() {
     const u = document.getElementById('loginUser').value;
@@ -190,20 +194,28 @@ function showAuthMsg(msg, isErr) {
     el.style.color = isErr ? '#e06060' : '#80e080';
 }
 function enterGame() {
+    const app = document.getElementById('app');
+    if (app) app.classList.remove('hide');
     hideLogin();
     const user = getCurrentUser();
     const loaded = loadGame();
     if (!loaded) newGame();
+    // 兼容旧存档：补默认值
+    if (!state.scholar) state.scholar = SCHOLAR_LIST[Math.floor(Math.random() * SCHOLAR_LIST.length)];
+    if (!Array.isArray(state.projects)) state.projects = [];
+    if (!Array.isArray(state.doneProjects)) state.doneProjects = [];
+    if (!Array.isArray(state.princes)) state.princes = [];
     log(`登录成功：${user}。`, 'good');
-    if (!state.princes.length) checkPrinceBirth(); // 首次必生皇子
+    if (!state.princes.length) ensureFirstPrince();
     refreshAllUI();
     if (typeof switchTab === 'function') switchTab('court');
     updateSeasonButton();
+    if (typeof saveGame === 'function') saveGame();
 }
 function logout() {
     logoutAccount();
-    // 回登录界面
-    document.getElementById('app').classList.add('hide');
+    const app = document.getElementById('app');
+    if (app) app.classList.add('hide');
     showLogin();
 }
 // 开始新的一局（新进度，保留账号）
@@ -217,9 +229,17 @@ function startNewGame() {
     if (typeof saveGame === 'function') saveGame();
 }
 function refreshAllUI() {
-    updateTopBar(); renderFactionPanel(); renderOverview(); renderLog(); renderFactionAlert();
-    renderAccountPanel(); renderProjectsPanel(); renderPrincesPanel(); renderPolicyPanel();
+    updateTopBar();
+    renderFactionPanel();
+    renderOverview();
+    renderLog();
+    renderFactionAlert();
+    renderPolicyPanel();
+    renderProjectsPanel();
+    renderPrincesPanel();
+    renderAccountPanel();
     updateSeasonButton();
+    if (typeof renderAccountList === 'function') renderAccountList();
 }
 
 function renderAccountList() {
@@ -229,8 +249,14 @@ function renderAccountList() {
     const names = Object.keys(db);
     const cur = getCurrentUser();
     container.innerHTML = names.length
-        ? names.map(n => `<div class="account-pill ${n === cur ? 'sel' : ''}">${n} · ${db[n].games||0}局 · ${db[n].endings?db[n].endings.length:0}结局</div>`).join('')
+        ? names.map(n => `<div class="account-pill ${n === cur ? 'sel' : ''}" onclick="quickLogin('${n}')">${n} · ${db[n].games||0}局 · ${db[n].endings?db[n].endings.length:0}结局</div>`).join('')
         : '<div style="color:#5a7a9f;font-size:11px;">尚无注册账号，请注册。</div>';
+}
+// 列出账号但密码未保存（本地安全考虑）。仅点击作为"选填到登录框"
+function quickLogin(name) {
+    const u = document.getElementById('loginUser'); if (u) u.value = name;
+    setAuthTab('login');
+    showAuthMsg(`已选账号"${name}"，请输入密码。`, false);
 }
 
 // —— 账号面板（游戏内） ——

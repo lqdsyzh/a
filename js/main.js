@@ -1,20 +1,22 @@
 // ========== 启动与初始化 ==========
 
 function initGame() {
-    // 每次加载先刷新登录界面列表
     if (typeof renderAccountList === 'function') renderAccountList();
-    // 若已有登录态（未退出），直接进入游戏
     if (getCurrentUser()) {
         const loaded = loadGame();
         if (!loaded) newGame();
+        // 兼容旧存档字段
+        if (!state.scholar) state.scholar = (typeof SCHOLAR_LIST !== 'undefined') ? SCHOLAR_LIST[Math.floor(Math.random() * SCHOLAR_LIST.length)] : '儒家';
+        if (!Array.isArray(state.projects)) state.projects = [];
+        if (!Array.isArray(state.doneProjects)) state.doneProjects = [];
+        if (!Array.isArray(state.princes)) state.princes = [];
         document.getElementById('app').classList.remove('hide');
-        if (!state.princes.length) checkPrinceBirth();
+        if (!state.princes.length && typeof ensureFirstPrince === 'function') ensureFirstPrince();
         log(`欢迎回来，${getCurrentUser()}。`);
         refreshAllUI();
         switchTab('court');
         updateSeasonButton();
     } else {
-        // 未登录：显示登录覆盖层
         document.getElementById('app').classList.add('hide');
         document.getElementById('loginOverlay').classList.remove('hide');
         setAuthTab('login');

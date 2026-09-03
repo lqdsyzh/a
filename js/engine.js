@@ -307,6 +307,8 @@ function annualSettlement() {
     updateFaction('civil', 1, 1);
     updateFaction('military', -1, 0);
     updateFaction('eunuch', 1, 1);
+    // 皇子年长一岁
+    if (typeof agePrinces === 'function') agePrinces();
     // 更换首辅学派
     state.scholar = SCHOLAR_LIST[Math.floor(Math.random() * SCHOLAR_LIST.length)];
     log(`永乐${state.year}年年度结算完成。今岁由【${state.scholar}】学派执掌朝柄。`);
@@ -318,17 +320,24 @@ function annualSettlement() {
 function checkPrinceBirth() {
     if (state.year - state.lastPrinceCheck < PRINCE_CYCLE_YEARS) return;
     state.lastPrinceCheck = state.year;
-    // 无后则必然新生
     const needBirth = state.princes.length === 0;
     if (needBirth || Math.random() < 0.6) {
         const given = PRINCE_GIVEN[Math.floor(Math.random() * PRINCE_GIVEN.length)];
         const char  = PRINCE_CHAR[Math.floor(Math.random() * PRINCE_CHAR.length)];
         const ability = 30 + Math.floor(Math.random() * 70);
         const name = '朱' + given;
-        const idx = state.princes.push({ name, char, ability, age: 1, crown: false }) - 1;
-        log(`后宫喜讯：皇子「${name}」诞生。` + (needBirth ? '' : ''));
-        if (typeof renderPrincesPanel === 'function') renderPrincesPanel();
+        state.princes.push({ name, char, ability, age: 1, crown: false });
+        log(`后宫喜讯：皇子「${name}」诞生。`);
     }
+}
+// 强制生一名皇子（首次进入游戏时使用）
+function ensureFirstPrince() {
+    if (state.princes.length > 0) return;
+    const given = PRINCE_GIVEN[Math.floor(Math.random() * PRINCE_GIVEN.length)];
+    const char  = PRINCE_CHAR[Math.floor(Math.random() * PRINCE_CHAR.length)];
+    const ability = 40 + Math.floor(Math.random() * 55);
+    const name = '朱' + given;
+    state.princes.push({ name, char, ability, age: 1, crown: false });
 }
 function agePrinces() {
     state.princes.forEach(p => { p.age++; });
@@ -435,4 +444,6 @@ function newGame() {
         hazards: [], _recentMemorials: []
     };
     Object.assign(state, fresh);
+    // 新一局必定有1名皇子开局
+    if (typeof ensureFirstPrince === 'function') ensureFirstPrince();
 }
